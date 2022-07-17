@@ -2,11 +2,7 @@
 #define NAME "DCCppS88 WiFi "
 #define VERSION "V1.0"
 
-#define MonSerial Serial1 // used to monitor activity
-#define DCCSerial Serial  // used to transmit data with the MEGA
-// #define SDA 4              // D2, I2C
-// #define SCL 5              // D1, I2C
-// #define pinD3 0           // D3, Flash/Boot
+#define DCCSerial Serial   // used to transmit data with the MEGA
 #define pinLedD5 14        // D5, connected to onboard LED on MEGA R3 WiFi board
 #define emergencyButton 12 // D6, LOW active
 #define pinD7 13           // D7, connected to MODE button on MEGA R3 WiFi board
@@ -68,8 +64,6 @@ void printOnLcd(uint8_t line, String header, String msg, String footer = "") {
 }
 
 void handleWebSocketMessage(AsyncWebSocketClient *client, char *payload) {
-  Serial.printf("%s\n", payload);
-
   if (payload[0] == '<') {
     DCCSerial.printf("%s\n", payload);
   }
@@ -80,13 +74,11 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
 
   switch (type) {
   case WS_EVT_CONNECT:
-    MonSerial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
-    printOnLcd(2, "Client connecte : ", String(client->id()));
+    printOnLcd(2, "Client connectee : ", String(client->id()));
     break;
 
   case WS_EVT_DISCONNECT:
-    MonSerial.printf("WebSocket client #%u disconnected\n", client->id());
-    printOnLcd(2, "Client deconnecte : ", String(client->id()));
+    printOnLcd(2, "Client deconnectee : ", String(client->id()));
     break;
 
   case WS_EVT_DATA:
@@ -97,8 +89,7 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
     }
     break;
 
-  case WS_EVT_PONG:
-  case WS_EVT_ERROR:
+  default:
     break;
   }
 }
@@ -153,7 +144,7 @@ void setup() {
 
   // Initialize SPIFFS
   if (!LittleFS.begin()) {
-    MonSerial.println("An Error has occurred while mounting SPIFFS");
+    printOnLcd(1, "Erreur de lecture de la mémoire, redemarrez la centrale svp", "");
     return;
   }
 
@@ -161,7 +152,7 @@ void setup() {
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
-    printOnLcd(1, "Connection..", "");
+    printOnLcd(1, "Connexion..", "");
   }
 
   // Set header for clients origin
