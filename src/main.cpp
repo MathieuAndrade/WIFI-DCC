@@ -15,8 +15,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <LittleFS.h>
 
-const char *ssid = "";
-const char *password = "";
+#include "config.h"
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
