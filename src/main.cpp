@@ -20,8 +20,8 @@
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
-LiquidCrystal_I2C lcd(0x27, 16, 2); // 2x16 display, adress of 1602A LCD = 0x20..0x27
-// LiquidCrystal_I2C lcd(0x27, 20, 4); // 4x20 display, adress of 2004A LCD = // 0x38..0x3F
+// LiquidCrystal_I2C lcd(0x27, 16, 2); // 2x16 display, adress of 1602A LCD = 0x20..0x27
+LiquidCrystal_I2C lcd(0x27, 20, 4); // 4x20 display, adress of 2004A LCD = // 0x38..0x3F
 // LiquidCrystal_I2C lcd(0x3F, 20, 4);   // 4x20 display, adress of 2004A LCD = 0x38..0x3F
 
 String listFiles(String path) {
@@ -220,6 +220,8 @@ void setup() {
 }
 
 void loop() {
-  ws.cleanupClients();
-  readDCCSerial();
+  if (WiFi.status() == WL_CONNECTED) {
+    ws.cleanupClients();
+    readDCCSerial();
+  }
 }
