@@ -1,5 +1,4 @@
-const char *ssid = "";
-const char *password = "";/**
+/**
  * @file config.h
  * @brief Configuration file for DCC++/DCCpp/DCCppS88 WiFi
  * @date 2021-01-02
@@ -7,6 +6,9 @@ const char *password = "";/**
  *          It is used by the main program and the webserver.
  *          You can change the settings here.
 */
+
+const char *ssid = "";
+const char *password = "";
 
 IPAddress local_IP(192, 168, 1, 90);
 IPAddress gateway(192, 168, 1, 1);
