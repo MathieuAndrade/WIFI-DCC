@@ -1,13 +1,8 @@
-#define PROJECT "Controller DCC++/DCCpp/DCCppS88 WiFi"
-#define NAME "DCCppS88 WiFi "
-#define VERSION "V1.0"
-
-#define DCCSerial Serial   // used to transmit data with the MEGA
-#define pinLedD5 14        // D5, connected to onboard LED on MEGA R3 WiFi board
-#define emergencyButton 12 // D6, LOW active
-#define pinD7 13           // D7, connected to MODE button on MEGA R3 WiFi board
-#define pinD8 15           // D8, connected to GND on MEGA R3 WiFi board
-#define AD_KEY A0          // Analog input, connected externally to a pullup resistor
+/**
+ * @author Mathieu Andrade
+ * @date 2021-01-02
+ * @details This sofware is used to control a DCC++ base station with a D1-Mini
+*/
 
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
@@ -19,10 +14,6 @@
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
-
-// LiquidCrystal_I2C lcd(0x27, 16, 2); // 2x16 display, adress of 1602A LCD = 0x20..0x27
-LiquidCrystal_I2C lcd(0x27, 20, 4); // 4x20 display, adress of 2004A LCD = // 0x38..0x3F
-// LiquidCrystal_I2C lcd(0x3F, 20, 4);   // 4x20 display, adress of 2004A LCD = 0x38..0x3F
 
 String listFiles(String path) {
   File dir = LittleFS.open(path, "r");
@@ -145,6 +136,11 @@ void setup() {
   if (!LittleFS.begin()) {
     printOnLcd(1, "Erreur de lecture de la mémoire, redemarrez la centrale svp", "");
     return;
+  }
+
+  // https://github.com/gilmaimon/ArduinoWebsockets/issues/90#issuecomment-1224361896
+  if (!WiFi.config(local_IP, gateway, subnet)) {
+    printOnLcd(1, "Echec de configuration de la connexion..", "");
   }
 
   // Connect to Wi-Fi
