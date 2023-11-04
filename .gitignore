@@ -1,4 +1,5 @@
 .pio
-src/config.h
 .vscode
 *.ini
+data/locos.json
+data/images
